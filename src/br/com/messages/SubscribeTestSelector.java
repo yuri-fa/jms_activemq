@@ -12,19 +12,21 @@ import javax.jms.Topic;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-public class SubscribeTest {
+public class SubscribeTestSelector {
 	public static void main(String[] args) throws NamingException, JMSException {
 		InitialContext context = new InitialContext();
 		ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
 		Connection connection = factory.createConnection();
-		connection.setClientID("mozo");
+		connection.setClientID("dona_maria");
 		connection.start();
 		
 		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		
 		Topic topic = (Topic) context.lookup("xilito");
-		//informando o nome da assinatura no subscribe
-		MessageConsumer messageConsumer = session.createDurableSubscriber(topic, "toindoxilito");
+		
+		//aqui é definido o selector a ser enviado e se essa conexão vai ou não produzir mensagem
+		//o valor definido para o seletor e fiado e o subcribe so recebera essa mensagem quando o publish não informar o seletor ou definilo com false
+		MessageConsumer messageConsumer = session.createDurableSubscriber(topic, "mariadoxilito","fiado is null OR fiado=false",false);
 		messageConsumer.setMessageListener(new MessageListener() {
 
 			@Override

@@ -25,9 +25,8 @@ public class TopicTest {
 		Destination destination = (Destination) context.lookup("xilito");
 		
 		MessageProducer messageProducer = session.createProducer(destination);
-		
-		Message message = session.createTextMessage("<xilito><name>xilitao de 1 real</name> <preco>1</preco></xilito>");
-		
+		Message message = session.createTextMessage("<xilito><name>xilitao de 1 real</name><preco>1</preco><fiado>false</fiado></xilito>");
+		message.setBooleanProperty("fiado", true);
 		messageProducer.send(message);
 		
 		session.close();
