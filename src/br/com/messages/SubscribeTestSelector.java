@@ -16,7 +16,7 @@ public class SubscribeTestSelector {
 	public static void main(String[] args) throws NamingException, JMSException {
 		InitialContext context = new InitialContext();
 		ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
-		Connection connection = factory.createConnection();
+		Connection connection = factory.createConnection("yuri","yuri");
 		connection.setClientID("dona_maria");
 		connection.start();
 		

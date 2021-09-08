@@ -16,8 +16,8 @@ public class TopicTest {
 		InitialContext context = new InitialContext();
 		
 		ConnectionFactory factory = (ConnectionFactory)context.lookup("ConnectionFactory");
-		
-		Connection connection = factory.createConnection();
+		//passando usuario e senha para a autenticação
+		Connection connection = factory.createConnection("yuri","yuri");
 		connection.start();
 		
 		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -26,7 +26,7 @@ public class TopicTest {
 		
 		MessageProducer messageProducer = session.createProducer(destination);
 		Message message = session.createTextMessage("<xilito><name>xilitao de 1 real</name><preco>1</preco><fiado>false</fiado></xilito>");
-		message.setBooleanProperty("fiado", true);
+		message.setBooleanProperty("fiado", false);
 		messageProducer.send(message);
 		
 		session.close();
