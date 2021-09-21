@@ -1,7 +1,6 @@
 package br.com.messages;
 
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -12,11 +11,14 @@ import javax.jms.Topic;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+
 public class SubscribeTest2 {
 	public static void main(String[] args) throws NamingException, JMSException {
 		InitialContext context = new InitialContext();
-		ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
-		Connection connection = factory.createConnection();
+		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+		factory.setTrustAllPackages(true);
+		Connection connection = factory.createConnection("yuri","yuri");
 		connection.setClientID("zezim");
 		connection.start();
 		

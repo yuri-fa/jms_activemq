@@ -1,22 +1,27 @@
 package br.com.messages;
 
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import br.com.model.Pedido;
+
 public class SubscribeTest {
 	public static void main(String[] args) throws NamingException, JMSException {
 		InitialContext context = new InitialContext();
-		ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
-		Connection connection = factory.createConnection();
+		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+		factory.setTrustAllPackages(true);
+//		ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
+		Connection connection = factory.createConnection("yuri", "yuri");
 		connection.setClientID("mozo");
 		connection.start();
 		
@@ -29,9 +34,11 @@ public class SubscribeTest {
 
 			@Override
 			public void onMessage(Message message) {
-				TextMessage textMessage =  (TextMessage) message;
+				 ObjectMessage  mapMessage = (ObjectMessage) message;
+//				ObjectMessage objectMessage =  (ObjectMessage) message;
 				try {
-					System.out.println(textMessage.getText());
+					Pedido pedido = (Pedido) mapMessage.getObject();
+					System.out.println(pedido);
 				} catch (JMSException e) {
 					e.printStackTrace();
 				}

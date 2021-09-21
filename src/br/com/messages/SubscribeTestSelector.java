@@ -1,21 +1,25 @@
 package br.com.messages;
 
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import br.com.model.Pedido;
+
 public class SubscribeTestSelector {
 	public static void main(String[] args) throws NamingException, JMSException {
 		InitialContext context = new InitialContext();
-		ConnectionFactory factory = (ConnectionFactory) context.lookup("ConnectionFactory");
+		ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+		factory.setTrustAllPackages(true);
 		Connection connection = factory.createConnection("yuri","yuri");
 		connection.setClientID("dona_maria");
 		connection.start();
@@ -31,16 +35,15 @@ public class SubscribeTestSelector {
 
 			@Override
 			public void onMessage(Message message) {
-				TextMessage textMessage =  (TextMessage) message;
+				ObjectMessage obj = (ObjectMessage) message;
 				try {
-					System.out.println(textMessage.getText());
+					Pedido pedido = (Pedido) obj.getObject();
+					System.out.println(pedido.getCodigo());
 				} catch (JMSException e) {
 					e.printStackTrace();
 				}
 			}
 			
 		});
-		
-		
 	}
 }

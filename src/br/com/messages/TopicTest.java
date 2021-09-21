@@ -10,6 +10,9 @@ import javax.jms.Session;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import br.com.model.Pedido;
+import br.com.util.PedidoFactory;
+
 public class TopicTest {
 	
 	public static void main(String[] args) throws NamingException, JMSException {
@@ -23,9 +26,10 @@ public class TopicTest {
 		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		
 		Destination destination = (Destination) context.lookup("xilito");
-		
+		Pedido pedido = PedidoFactory.gerarPedidoComValores();
 		MessageProducer messageProducer = session.createProducer(destination);
-		Message message = session.createTextMessage("<xilito><name>xilitao de 1 real</name><preco>1</preco><fiado>false</fiado></xilito>");
+		
+		Message message = session.createObjectMessage(pedido);
 		message.setBooleanProperty("fiado", false);
 		messageProducer.send(message);
 		
